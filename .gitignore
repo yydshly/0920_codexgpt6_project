@@ -1,0 +1,14 @@
+# Local editor and runtime files
+.DS_Store
+Thumbs.db
+node_modules/
+*.log
+
+# Research downloads duplicated by the runnable demo. Source links and
+# attribution are kept in asset-research and companion-web/dist/assets.
+asset-research/*.vrm
+asset-research/*.glb
+asset-research/*.png
+asset-research/*.jpg
+asset-research/*.webp
+

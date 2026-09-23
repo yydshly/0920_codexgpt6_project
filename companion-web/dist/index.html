@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#162743">
+  <title>栖伴 · 桌面里的小伙伴</title>
+  <meta name="description" content="一个可交互的桌面伴侣原型：真实 3D 人物、模拟桌面、语音和动作。">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='10' fill='%23162743'/%3E%3Cpath d='M8 20V12l8-4 8 4v8l-8 4z' fill='none' stroke='%238cf0d5' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%238cf0d5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./studio.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/","@pixiv/three-vrm":"./vendor/three-vrm.module.min.js"}}</script>
+</head>
+<body>
+  <div id="desktop" aria-label="模拟桌面">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">栖</span><span>栖伴</span><span class="divider"></span><span class="edition">桌面体验</span></div>
+      <div class="topbar-right"><button id="scene-button" class="nav-button scene-button" aria-pressed="false">进入工作室</button><button id="appearance-button" class="nav-button">人物</button><button id="abilities-button" class="nav-button">能力</button><button id="help-button" class="quiet-button" aria-label="使用说明">?</button><time id="clock"></time></div>
+    </header>
+    <div class="wallpaper-word" aria-hidden="true">A little company.</div>
+    <main id="workspace" tabindex="0" aria-label="可交互桌面区域">
+      <div id="studio-layer" hidden></div>
+      <div id="studio-intro" hidden><span>一个一起工作的房间</span><p>把资料放进柜子，把今天写在白板上。</p></div>
+      <div id="icons" aria-label="桌面图标"></div>
+      <div id="destination" aria-hidden="true"></div>
+      <canvas id="avatar-canvas" aria-label="实时三维角色"></canvas>
+      <button id="avatar-hit" aria-label="和小栖打招呼" title="点击打招呼，也可以把文本文件拖给我"></button>
+      <div id="speech-bubble" class="speech-bubble" role="status" aria-live="polite"><span class="bubble-name">小栖</span><p id="speech-text">正在准备见面…</p></div>
+      <div id="avatar-label"><span id="avatar-state">正在加载角色</span></div>
+      <div id="avatar-tools" aria-label="人物视角"><button id="walk-style-button" aria-haspopup="dialog">走路效果 · 03</button><button id="closeup-button" aria-pressed="false">近看人物</button><button id="turn-button">转一圈</button></div>
+      <section id="app-window" class="app-window" aria-label="模拟应用窗口" hidden>
+        <header id="window-titlebar"><span class="window-heading"><span id="window-icon"></span><strong id="window-title">我的项目</strong></span><button id="close-window" aria-label="关闭窗口">×</button></header>
+        <div id="window-content"></div>
+      </section>
+      <div id="loading" class="loading"><span class="loader"></span><span id="loading-text">小栖正在过来</span></div>
+    </main>
+    <div id="task-progress" class="task-progress" role="status" hidden><span id="task-progress-label"></span><span id="task-count"></span><div><i id="task-bar"></i></div></div>
+    <footer class="desktop-footer">
+      <div id="studio-toolbar" hidden>
+        <div class="studio-status"><span><i></i><strong id="studio-project-name">我的项目</strong><span id="studio-state" role="status">正在准备工作室</span></span><button id="skip-scene" hidden>跳过动作</button></div>
+        <div class="studio-actions" aria-label="工作室入口"><button data-studio-open="projects">项目柜</button><button data-studio-open="notes">工作桌</button><button data-studio-open="todos">任务白板</button><button data-studio-station="rest">休息一下</button><button id="tour-button">体验取资料 <span>↗</span></button></div>
+      </div>
+      <div class="quick-actions" aria-label="试试这些互动"><button data-command="打开我的项目"><span>↗</span> 打开我的项目</button><button data-command="整理桌面"><span>▦</span> 整理桌面</button><button data-command="打个招呼"><span>✧</span> 打个招呼</button></div>
+      <form id="command-form" class="command-dock">
+        <button type="button" id="voice-button" class="dock-button" aria-label="语音输入" title="语音输入"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0014 0v-2M12 19v3m-4 0h8"/></svg></button>
+        <label for="command-input" class="sr-only">给小栖的指令</label><input id="command-input" autocomplete="off" maxlength="2000" placeholder="记下灵感、添加待办，或让我帮忙…">
+        <button type="button" id="stop-button" class="dock-button" aria-label="停止当前动作" title="停止 · Esc" hidden>■</button>
+        <button type="submit" id="send-button" class="send-button" aria-label="发送指令">↑</button>
+        <span class="dock-separator"></span><button type="button" id="sound-button" class="dock-button" aria-label="开启语音播报" aria-pressed="false" title="开启语音播报"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5zm5 4l5 6m0-6l-5 6"/></svg></button>
+      </form>
+      <div class="footer-hints"><span id="hint">本地能力 · 内容保存在当前浏览器</span><button id="undo-button" hidden>撤销上一步</button><button id="reset-button">还原图标位置</button></div>
+    </footer>
+    <aside id="toast" class="toast" role="status" hidden></aside>
+    <dialog id="help-dialog">
+      <button id="close-help" class="dialog-close" aria-label="关闭说明">×</button><span class="eyebrow">很高兴见到你</span><h1>这里多了一位小伙伴。</h1><p>小栖是实时渲染的 3D 人物。试着给她一个指令，或者直接和桌面互动。</p>
+      <ul><li><strong>在房间里工作</strong><span>单击空白处，她会沿前景地面走到对应位置；途中再点可改变目标。点击项目柜、工作桌或白板，内容立即打开。点击“体验取资料”，观看完整动作。</span></li><li><strong>切换场景</strong><span>右上角切换经典桌面与工作室，两种场景共用笔记、待办和文件，也都支持单击空白处走动。工作室方向键切换站位。Esc 停止。</span></li><li><strong>把文件递给她</strong><span>拖入本地 .txt 或 .md 文件，查看、搜索并提取原文要点。</span></li><li><strong>听她说话</strong><span>点击声音按钮开启系统语音。语音输入取决于浏览器支持，可能由浏览器语音服务处理。</span></li></ul>
+      <p class="prototype-note">网页中的笔记、待办、文件搜索与要点提取可以实际使用。当前使用本地指令规则，尚未连接语言模型，也不会操作电脑桌面或上传导入文件。清除浏览器数据会清除保存内容。</p><p class="credits">人物：VRoid / pixiv Inc. 官方示例模型<br><a href="./assets/ATTRIBUTION.txt" target="_blank" rel="noopener">模型及开源许可</a></p>
+    </dialog>
+    <dialog id="walk-dialog" class="companion-dialog" aria-labelledby="walk-dialog-title">
+      <button id="close-walk-dialog" class="dialog-close" aria-label="关闭走路效果">×</button>
+      <span class="eyebrow">保留探索，继续改进</span><h1 id="walk-dialog-title">选一种走路效果。</h1><p>前两版都留在这里，可以随时切换、对比。</p>
+      <div class="walk-choices" aria-label="走路效果">
+        <button data-walk-style="v1" aria-pressed="false"><span>01</span><div><strong>最初步态</strong><small>早期的程序步行效果</small></div><em>已保留</em></button>
+        <button data-walk-style="v2" aria-pressed="false"><span>02</span><div><strong>上一版步态</strong><small>上次的落脚与动画混合效果</small></div><em>已保留</em></button>
+        <button data-walk-style="v3" aria-pressed="true"><span>03</span><div><strong>轻松步态</strong><small>身体更直立，脚步贴近重心，摆臂更轻</small></div><em>新版本</em></button>
+      </div>
+      <p id="walk-style-status" class="panel-note" role="status">当前：03 · 轻松步态</p>
+      <div class="walk-dialog-actions"><button id="preview-walk" class="primary-action">走一段看看</button><button id="done-walk-dialog" class="secondary-action">回到房间</button></div>
+      <p class="panel-note">选择会记住；也可以关闭后单击空白处，让她走到你点的位置。</p>
+    </dialog>
+    <dialog id="companion-dialog" class="companion-dialog">
+      <button id="close-companion" class="dialog-close" aria-label="关闭人物和能力面板">×</button>
+      <div class="panel-tabs" role="tablist" aria-label="伙伴设置"><button id="tab-appearance" role="tab" aria-selected="true" aria-controls="panel-appearance">人物与陪伴</button><button id="tab-abilities" role="tab" aria-selected="false" aria-controls="panel-abilities">让她帮忙</button></div>
+      <section id="panel-appearance" role="tabpanel" aria-labelledby="tab-appearance">
+        <span class="eyebrow">选择你的桌面伙伴</span><h1>一眼喜欢，慢慢熟悉。</h1><p>三种实时 3D 形象，保留各自的发丝、衣装和表情。</p>
+        <div class="avatar-cards">
+          <button data-avatar="modern" aria-pressed="true"><img src="./assets/avatars/modern.webp" alt="短发、米色开衫的日常便装人物"><strong>日常便装</strong><small>轻松 · 亲近</small></button>
+          <button data-avatar="gentle" aria-pressed="false"><img src="./assets/avatars/gentle.webp" alt="粉金色长发和洋装人物"><strong>温柔洋装</strong><small>温柔 · 明亮</small></button>
+          <button data-avatar="future" aria-pressed="false"><img src="./assets/avatars/future.webp" alt="银蓝短发和科技风服装人物"><strong>未来感</strong><small>灵动 · 俏皮</small></button>
+        </div>
+        <div id="model-status" class="panel-note" role="status">选择后会记住，下次见面还是她。</div>
+        <div class="setting-row"><label for="avatar-size">人物大小</label><input id="avatar-size" type="range" min="0.75" max="1.15" step="0.05" value="1"><output id="size-output">100%</output></div>
+        <div class="setting-row"><label for="quiet-mode">安静陪伴 <small>收起问候，专心做事</small></label><input id="quiet-mode" type="checkbox" role="switch"></div>
+        <div class="gesture-buttons"><button data-command="挥手">挥挥手</button><button data-command="点头">点个头</button><button data-command="伸懒腰">伸个懒腰</button><button data-command="想一想">想一想</button></div>
+        <button id="import-avatar" class="text-action">使用自己的 VRM 人物</button><p class="panel-note">文件仅在本页使用；刷新后恢复内置形象。</p>
+      </section>
+      <section id="panel-abilities" role="tabpanel" aria-labelledby="tab-abilities" hidden>
+        <span class="eyebrow">从一件小事开始</span><h1>陪着你，也帮得上忙。</h1><p>这些功能现在就可以使用。点一下，或直接在底部告诉我。</p>
+        <div class="ability-list"><button data-command="打开笔记"><span>✎</span><div><strong>接住灵感</strong><small>写下、编辑和保存笔记</small></div><b>↗</b></button><button data-command="打开待办"><span>✓</span><div><strong>安排今天</strong><small>添加、完成、撤销待办</small></div><b>↗</b></button><button data-import><span>↥</span><div><strong>一起读文件</strong><small>导入 TXT / MD，提取带来源的要点</small></div><b>↗</b></button><button data-command="打开项目"><span>⌕</span><div><strong>找回需要的内容</strong><small>搜索笔记、文件和待办</small></div><b>↗</b></button></div>
+        <div class="command-example"><span>还可以连着说</span><button data-command="整理桌面，然后打开待办">“整理桌面，然后打开待办” <b>↗</b></button></div>
+        <p class="panel-note">当前为本地指令模式。自由聊天与语义推理尚未连接模型；文件要点来自原文提取。</p>
+      </section>
+    </dialog>
+    <input id="text-file-input" type="file" accept=".txt,.md,text/plain,text/markdown" hidden><input id="vrm-file-input" type="file" accept=".vrm" hidden>
+  </div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

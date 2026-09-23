@@ -1,0 +1,68 @@
+Qiban desktop companion v0.5 — third-party asset notices
+
+Default avatar: AvatarSample_A — VRoid / pixiv Inc.
+Files: avatars/modern.vrm, avatars/modern.webp
+This model is NOT CC0. VRoid sample model conditions of use apply:
+https://vroid.pixiv.help/hc/en-us/articles/4402394424089
+Official model page:
+https://hub.vroid.com/en/characters/2843975675147313744/models/5644550979324015604
+Modification and commercial use are permitted under those conditions.
+Redistribution of the original model must be free. The sample data must not be
+used to operate a character creation service. Review the full conditions before
+distributing a commercial product. This local companion demo preserves the model.
+Source mirror: https://github.com/madjin/vrm-samples/tree/master/vroid/stable
+
+Vita — VRoid / pixiv Inc.
+Files: avatars/future.vrm, avatars/future.webp
+Model license: CC0 1.0 Universal
+Creator's license confirmation: https://vroid.pixiv.help/hc/en-us/articles/360014900113
+Source mirror: https://github.com/madjin/vrm-samples/tree/master/vroid/beta
+The model binary and embedded metadata are preserved.
+
+Selection cards are extracted from the corresponding model's embedded portrait.
+
+3D avatar: Victoria Rubin — VRoid / pixiv Inc.
+Files: avatars/gentle.vrm, avatars/gentle.webp (companion.vrm is the legacy copy)
+Model license: CC0 1.0 Universal
+Creator's license confirmation: https://vroid.pixiv.help/hc/en-us/articles/360014900233
+Official name: beta Ver AvatarSample_4, previously Victoria Rubin.
+Naming history: https://vroid.pixiv.help/hc/en-us/articles/4402035114777
+CC0 legal text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+Downloaded from the community mirror of official VRoid samples:
+https://github.com/madjin/vrm-samples/blob/master/vroid/beta/Victoria_Rubin.vrm
+SHA256: B1372131BDBF233F46320146D565F342A7E4F6F4B8F2AEFB301F1A283EC07E1E
+The model binary and its embedded metadata are preserved. A readable copy of
+the metadata is provided in model-meta.json. The model is CC0; the rendering
+libraries below have their own MIT licenses.
+
+Three.js 0.180.0
+Copyright © 2010-2025 three.js authors. MIT license.
+https://github.com/mrdoob/three.js
+Full license: ../vendor/THREE-LICENSE.txt
+
+@pixiv/three-vrm 3.5.4
+Copyright © 2019 pixiv Inc. MIT license.
+https://github.com/pixiv/three-vrm
+Full license: ../vendor/THREE-VRM-LICENSE.txt
+
+Authored human animations — Mesh2Motion contributors
+File: motions/companion-motion.json
+Source clips: Walk, Walk_Carry, Idle_A from human-base-animations.glb
+Source: https://github.com/Mesh2Motion/mesh2motion-app/tree/main/static/animations
+Official asset license: CC0 1.0 Universal
+https://github.com/Mesh2Motion/mesh2motion-app/blob/main/LICENSE-CC0.MD
+https://github.com/Mesh2Motion/mesh2motion-app#licenses
+License legal text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+The compact local data contains normalized humanoid bone rotations only;
+source mesh, textures, scales, and root translations are not included.
+See motions/README.md for provenance, extraction, and coordinate details.
+The animation license does not change the separate avatar model licenses above.
+
+Motion implementation combines these authored upper-body walking, carrying,
+and idle clips with Footwork leg IK and procedural keyframed gestures.
+
+Studio room and folder prop
+studio-room.png and studio-folder.png were generated for this prototype on
+2026-09-22. The room is a fixed-camera image derived from the selected studio
+concept; the avatar is rendered separately. Generation briefs are recorded in
+asset-research/studio-room-clean.md and asset-research/studio-folder.md.

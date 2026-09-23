@@ -53,7 +53,7 @@
 
 ## 本地运行
 
-需要 Node.js 18+，无需安装依赖，也不依赖运行时 CDN：
+需要 Node.js 22+，无需安装依赖，也不依赖运行时 CDN：
 
 ```bash
 cd companion-web

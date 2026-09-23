@@ -53,7 +53,7 @@ export class Avatar {
   async load(url='./assets/avatars/modern.vrm'){
     const request=this.loadRequest=(this.loadRequest||0)+1;
     const loader=new GLTFLoader();loader.register(parser=>new VRMLoaderPlugin(parser));
-    const gltf=await loader.loadAsync(url,event=>{if(request===this.loadRequest&&event.total)document.querySelector('#loading-text').textContent=`准备人物 · ${Math.round(event.loaded/event.total*100)}%`;});
+    const gltf=await loader.loadAsync(url,event=>{if(request===this.loadRequest&&event.total)document.querySelector('#loading-text').textContent=`准备人物 · ${Math.min(99,Math.round(event.loaded/event.total*100))}%`;});
     const next=gltf.userData.vrm;if(!next){VRMUtils.deepDispose(gltf.scene);throw new Error('模型不包含 VRM 数据');}
     if(request!==this.loadRequest){VRMUtils.deepDispose(next.scene);return false;}
     for(const name of ['hips','leftUpperLeg','rightUpperLeg','leftLowerLeg','rightLowerLeg','leftFoot','rightFoot'])if(!next.humanoid.getNormalizedBoneNode(name)){VRMUtils.deepDispose(next.scene);throw new Error('模型缺少完整的人形骨骼');}

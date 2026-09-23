@@ -8,7 +8,7 @@
 
 ## 在线体验与效果
 
-部署入口：**GitHub Pages 发布后在此补入实际地址。** 本地可直接运行下方命令。建议使用桌面浏览器打开；第一次载入 3D 模型需要一些时间。
+**[打开在线演示](https://yydshly.github.io/0920_codexgpt6_project/)** · [查看 GitHub 仓库](https://github.com/yydshly/0920_codexgpt6_project)。建议使用桌面浏览器打开；第一次载入 3D 模型需要一些时间。
 
 ![工作室：人物、项目柜、工作桌和任务白板在同一空间](companion-web/design-qa/studio-final.png)
 
